@@ -5,7 +5,7 @@
 // ==================================
 //          reduxState => users
 export function selectUsers(reduxState) {
-  return reduxState.users;
+  return reduxState.users.tas;
 }
 
 // Parametrized selector:
@@ -16,7 +16,7 @@ export function selectUsers(reduxState) {
 // name =>  reduxState => users with that name
 export function selectUsersLike(prefix) {
   return function (reduxState) {
-    return reduxState.users.filter((user) => {
+    return reduxState.users.tas.filter((user) => {
       return user.name.toLowerCase().startsWith(prefix.toLowerCase());
     });
   };
