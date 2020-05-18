@@ -1,68 +1,136 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Code #39 - day 3 recap of Redux syntax & setup
 
-## Available Scripts
+### How do you create a store?
 
-In the project directory, you can run:
+```jsx
+import { createStore } from "redux";
 
-### `yarn start`
+export const store = createStore(reducer);
+```
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### What does the basic structure of a reducer look like?
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+```jsx
+const initialState = {};
 
-### `yarn test`
+export default function reducer(state = initialState, action) {
+  switch (action.type) {
+    default: {
+      return state;
+    }
+  }
+}
+```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### An example of a simple selector
 
-### `yarn build`
+```jsx
+export function selectUsers(reduxState) {
+  return reduxState.users;
+}
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Suppose selectUsers is a selector, how do you use it in a component?
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+```jsx
+import { useSelector } from "react-redux";
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+import { selectUsers } from "./store/selectors";
 
-### `yarn eject`
+export default function MyComponent() {
+  const users = useSelector(selectUsers);
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  // ...
+}
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Can you write a simple example of a parametrized selector?
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```jsx
+// a parametrized selector is a function that...
+export function selectUsersLike(prefix) {
+  // returns a normal selector:
+  return function (reduxState) {
+    // and then something interesting in here, for example:
+    return reduxState.users.filter((user) => {
+      return user.name.toLowerCase().startsWith(prefix.toLowerCase());
+    });
+  };
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### An example of an action (object expression)
 
-## Learn More
+```jsx
+{
+  type: "add_ta",
+  payload: {
+    name: "Zorana"
+  }
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### How do you get the "dispatch" function in a component?
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```jsx
+import { useDispatch } from "react-redux";
 
-### Code Splitting
+export default function MyComponent() {
+  const dispatch = useDispatch();
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+  // ...
+}
+```
 
-### Analyzing the Bundle Size
+### How do you dispatch an action in a component?
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+```jsx
+import { useDispatch } from "react-redux";
 
-### Making a Progressive Web App
+export default function MyComponent() {
+  const dispatch = useDispatch();
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+  // in a handler:
+  const addNewTa = () => {
+    dispatch({
+      type: "add_ta",
+      payload: {
+        name: "Zorana",
+      },
+    });
+  };
 
-### Advanced Configuration
+  // ...
+}
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+### What does an action creator look like?
 
-### Deployment
+```jsx
+export function addTa(name) {
+  return {
+    type: "add_ta",
+    payload: {
+      name: "Zorana",
+    },
+  };
+}
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+### How do you use combineReducers to create a store built from separate slicers?
 
-### `yarn build` fails to minify
+```jsx
+import { combineReducers } from "redux";
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+import usersReducer from "./usersReducer";
+// import mapsReducer from "./mapsReducer";
+// import cartReducer from "./cartReducer";
+
+const reducer = combineReducers({
+  users: usersReducer,
+  // maps: mapsReducer,
+  // cart: cartReducer
+});
+
+export default reducer;
+```
