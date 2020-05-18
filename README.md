@@ -1,4 +1,8 @@
-# Code #39 - day 3 recap of Redux syntax & setup
+# Code #39 - Redux day 3
+
+## 1. Morning recap of Redux syntax & setup
+
+The [Git commit](https://github.com/Codaisseur/redux-recap-day-3-code-39/commit/60f87705ae5d4d4bb44272cb25b72fc614611c54)
 
 ### How do you create a store?
 
@@ -134,3 +138,8 @@ const reducer = combineReducers({
 
 export default reducer;
 ```
+
+## 2. Noon intro / lecture on thunks
+
+- The [recorded lecture](https://youtu.be/oRcuGiz_f1g)
+- The [Git commit](https://github.com/Codaisseur/redux-recap-day-3-code-39/commit/42a074d0face252e9a88a0235ff2d171a7e6b388)
