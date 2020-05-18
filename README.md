@@ -143,3 +143,70 @@ export default reducer;
 
 - The [recorded lecture](https://youtu.be/oRcuGiz_f1g)
 - The [Git commit](https://github.com/Codaisseur/redux-recap-day-3-code-39/commit/42a074d0face252e9a88a0235ff2d171a7e6b388)
+
+## Action bingo
+
+### Level 1: Action objects
+
+```jsx
+{
+  type: "add_ta",
+  payload: {
+    name: "Zorana",
+  },
+}
+```
+
+Just dispatch it already! :)
+
+### Level 2: Action creators
+
+Functions that create actions
+
+```jsx
+function addTa(name) {
+  return {
+    type: "add_ta",
+    payload: {
+      name: name,
+    },
+  };
+}
+```
+
+And then you dispatch it: `dispatch(addTa("Zorana"))`
+
+### Level 3: Thunk, or thunk action
+
+- A function that takes two arguments, `dispatch` and `getState`, and gets called by the Redux-Thunk middleware when dispatched to the store.
+
+- A block of code / logic that you want to run "in the store"
+
+- Can dispatch as many times, whenever it wants to. "Orchestrates" some store logic by dispatching actions etc.
+
+- Typical example
+
+  ```jsx
+  async function myThunk(dispatch, getState) {
+    dispatch(someAction);
+
+    const data = await fetchData();
+    dispatch({ type: "fetched_data", payload: data });
+  }
+  ```
+
+And then you dispatch it: `dispatch(myThunk)`
+
+### Thunk action creator / parametrized thunk
+
+Like a parametrized selector, it's a function that you call yourself, in order to create the thunk
+
+```jsx
+function fetchDeveloper(id) {
+  return function myThunk(dispatch, getState) {
+    // the thunk itself
+  };
+}
+```
+
+And then you dispatch it: `dispatch(fetchDeveloper(42))`
